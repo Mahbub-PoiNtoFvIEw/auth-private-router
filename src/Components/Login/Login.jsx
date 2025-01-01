@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../Provider/AuthProvider";
 import { GoEyeClosed, GoEye  } from "react-icons/go";
 
@@ -7,8 +7,9 @@ const Login = () => {
     const [errorMessage, setErrorMessage] = useState("");
     const [successMessage, setSuccessMessage] = useState("");
     const [showPassword, setShowPassword] = useState(false);
+    const navigate = useNavigate();
 
-    const {loggedInUser} = useContext(AuthContext);
+    const {loggedInUser, loginWithGoogle} = useContext(AuthContext);
 
     const handleLogin = e =>{
         e.preventDefault();
@@ -22,12 +23,25 @@ const Login = () => {
         console.log(email, password);
 
         loggedInUser(email, password)
-        .then(result =>{
-          setSuccessMessage("Logged In Successful");
-        })
-        .catch(error =>{
-          setErrorMessage(error.message);
-        })
+          .then(result =>{
+            setSuccessMessage("Logged In Successful");
+            e.target.reset();
+            navigate('/');
+          })
+          .catch(error =>{
+            setErrorMessage(error.message);
+          })
+    }
+
+    const handleLoginWithGoogle = () =>{
+      loginWithGoogle()
+      .then( () =>{
+        setSuccessMessage("logged In Successful");
+        navigate('/');
+      })
+      .catch(error =>{
+        setErrorMessage(error.message);
+      })
     }
 
     const handleShowPassword = () =>{
@@ -91,6 +105,9 @@ const Login = () => {
               }
             </div>
           </form>
+          <div className="flex justify-center items-center -mt-4 mb-2">
+              <button onClick={handleLoginWithGoogle} className="btn btn-ghost">Google Login</button>
+          </div>
         </div>
       </div>
     </div>

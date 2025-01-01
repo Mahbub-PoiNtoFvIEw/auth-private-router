@@ -1,13 +1,17 @@
 import React, { useContext } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../Provider/AuthProvider";
 
 const Header = () => {
   const {user, logout} = useContext(AuthContext);
+  // const navigate = useNavigate();
 
   const handleLogOut = () =>{
     logout()
-    .then(()=>console.log('user loggedOut'))
+    .then(()=>{
+      console.log('user loggedOut');
+      // navigate("/login");
+    })
     .catch(error=> console.error(error.message))
   };
 
@@ -25,6 +29,13 @@ const Header = () => {
       <li>
         <NavLink to={`/orders`}>Orders</NavLink>
       </li>
+      {user &&
+        <>
+          <li>
+            <NavLink to={`/profile`}>Profile</NavLink>
+          </li>
+        </>
+      }
     </>
   );
 
@@ -67,10 +78,10 @@ const Header = () => {
           {
             user ? <>
               <span>{user.email}</span>
-              <a onClick={handleLogOut} className="btn btn-sm ml-1">Sign Out</a>
+              <a onClick={handleLogOut} className="btn btn-sm ml-1">LogOut</a>
             </>
             :
-            <Link to={`/login`}><button className="btn btn-sm ml-1">Log In</button></Link>
+            <Link to={`/login`}><button className="btn btn-sm ml-1">LogIn</button></Link>
           }
         </div>
       </div>
